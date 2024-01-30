@@ -123,7 +123,7 @@ function App() {
     // console.log(...arr);
     data.push(...newArr);
 
-    const csvContent = data.map((row) => row.join(",")).join("\n");
+    const csvContent = data.map((row) => row.join(";")).join("\n");
     console.log(csvContent);
 
     const blob = new Blob([csvContent], { type: "text/xlsx" });
