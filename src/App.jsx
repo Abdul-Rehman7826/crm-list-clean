@@ -181,7 +181,7 @@ function App() {
               onClick={() => setLoading(true)}
             />
           </div>
-          <div className="form-group mb-3">
+          <div className="form-group">
             <label htmlFor="IDS_Pages" className="form-label">
               IDS Pages
             </label>
@@ -194,7 +194,7 @@ function App() {
               onClick={() => setLoading(true)}
             />
           </div>
-          <div className="mb-3 from-group">
+          <div className="from-group">
             <label htmlFor="D7_Pages" className="form-label">
               D7 Pages
             </label>
@@ -212,10 +212,11 @@ function App() {
             IDS_Pages.length > 0 ||
             D7_Pages.length > 0) &&
             !loading && (
-              <div className="form-group">
+              <div className="form-group w-100">
+                <hr className="mb-3" />
                 <button
                   type="button"
-                  className="btn btn-success btn-block"
+                  className=" w-100 btn btn-success btn-block"
                   onClick={handleClick}
                 >
                   Download File
