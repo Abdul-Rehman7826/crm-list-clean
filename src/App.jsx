@@ -1,5 +1,6 @@
 import { useState } from "react";
 import * as XLSX from "xlsx";
+import "./App.css";
 
 function App() {
   const [IDS_Groups, setIDS_Groups] = useState([]);
@@ -163,11 +164,11 @@ function App() {
   return (
     <>
       <div className="p-3 d-flex flex-column justify-content-center">
-        <div className="mx-auto" style={{ maxWidth: " 460px" }}>
+        <div className="form-container">
           <h1 className="text-center">CRM List Clean</h1>
           <hr className="mb-3" />
 
-          <div className="mb-3">
+          <div className="form-group">
             <label htmlFor="IDS_Groups" className="form-label">
               IDS Groups
             </label>
@@ -180,7 +181,7 @@ function App() {
               onClick={() => setLoading(true)}
             />
           </div>
-          <div className="mb-3">
+          <div className="form-group mb-3">
             <label htmlFor="IDS_Pages" className="form-label">
               IDS Pages
             </label>
@@ -193,7 +194,7 @@ function App() {
               onClick={() => setLoading(true)}
             />
           </div>
-          <div className="mb-3">
+          <div className="mb-3 from-group">
             <label htmlFor="D7_Pages" className="form-label">
               D7 Pages
             </label>
@@ -211,13 +212,15 @@ function App() {
             IDS_Pages.length > 0 ||
             D7_Pages.length > 0) &&
             !loading && (
-              <button
-                type="button"
-                className="btn btn-success"
-                onClick={handleClick}
-              >
-                Download File
-              </button>
+              <div className="form-group">
+                <button
+                  type="button"
+                  className="btn btn-success btn-block"
+                  onClick={handleClick}
+                >
+                  Download File
+                </button>
+              </div>
             )}
         </div>
       </div>
