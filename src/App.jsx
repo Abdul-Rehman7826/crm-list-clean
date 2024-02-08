@@ -57,7 +57,7 @@ function App() {
     if (controlId == "IDS_Pages") {
       data.shift();
       var arr = data.map((v) => {
-        return [v[0], v[2]];
+        return [v[0], v[1]];
       });
       console.log(arr);
       if (arr.length > 0) setIDS_Pages(arr);
