@@ -6,8 +6,24 @@ function App() {
   const [IDS_Groups, setIDS_Groups] = useState([]);
   const [IDS_Pages, setIDS_Pages] = useState([]);
   const [D7_Pages, setD7_Pages] = useState([]);
+  const [numFiles, setNumFiles] = useState(0);
+  const [next, setNext] = useState(0);
+
+  const [fileName, setFileName] = useState(`Output ${fileNum()}`);
   const [loading, setLoading] = useState(false);
 
+  function fileNum() {
+    const ydate = new Date();
+    return `${ydate.getFullYear()}${
+      ydate.getMonth() > 10 ? ydate.getMonth() : "0" + ydate.getMonth()
+    }${ydate.getDate() > 10 ? ydate.getDate() : "0" + ydate.getDate()}${
+      ydate.getHours() > 10 ? ydate.getHours() : "0" + ydate.getHours()
+    }${
+      ydate.getMinutes() > 10 ? ydate.getMinutes() : "0" + ydate.getMinutes()
+    }${
+      ydate.getSeconds() > 10 ? ydate.getSeconds() : "0" + ydate.getSeconds()
+    }`;
+  }
   function readExcelFile(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -41,6 +57,7 @@ function App() {
   }
 
   const onChange = async (e) => {
+    console.log(e.target);
     const [file] = e.target.files;
     const controlId = e.target.id;
     const data = await processExcelFile(file);
@@ -73,7 +90,7 @@ function App() {
     }
   };
 
-  const handleClick = () => {
+  const handleClick = async () => {
     var arr = [];
 
     arr.push(...IDS_Groups);
@@ -111,38 +128,57 @@ function App() {
       ];
     });
 
-    var data = [
-      [
-        "Facebook ID",
-        "Facebook Profile link",
-        "Name",
-        "Label Name",
-        "Tags",
-        "Email",
-      ],
+    var headers = [
+      "Facebook ID",
+      "Facebook Profile link",
+      "Name",
+      "Label Name",
+      "Tags",
+      "Email",
     ];
-    data.push(...newArr);
-    // Create a new workbook
-    const workbook = XLSX.utils.book_new();
-    const worksheet = XLSX.utils.aoa_to_sheet(data);
-    XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-    const excelBuffer = XLSX.write(workbook, {
-      bookType: "xlsx",
-      type: "array",
+
+    // console.log(newArr);
+    // [headers, ...newArr.slice(5, 10)]
+    var dataArray = [];
+    var n = Math.ceil(newArr.length / numFiles);
+
+    for (var i = 0; i < newArr.length; i += n) {
+      dataArray.push([headers, ...newArr.slice(i, i + n)]);
+    }
+    console.log(dataArray);
+    var blobArr = [];
+    const promises = dataArray.map(async (d) => {
+      // Create a new workbook
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.aoa_to_sheet(newArr);
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+      const blob = new Blob([excelBuffer], {
+        type: "application/octet-stream",
+      });
+      const url = URL.createObjectURL(blob);
+      downloadFile(url);
+      URL.revokeObjectURL(url);
+      return blob;
     });
-    const blob = new Blob([excelBuffer], { type: "application/octet-stream" });
-    const url = URL.createObjectURL(blob);
+    const res = await Promise.all(promises);
+    console.log(res);
+
+    console.log("Done ! ");
+  };
+
+  function downloadFile(url) {
     const a = document.createElement("a");
     a.href = url;
-    a.download = "data.xlsx";
+    a.download = `${fileName}.xlsx`;
     a.style.display = "none";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-
-    console.log("Done ! ");
-  };
+  }
 
   function removeDuplicatesByColumn(arr, columnIndex) {
     var uniqueArray = [];
@@ -166,63 +202,114 @@ function App() {
       <div className="p-3 d-flex flex-column justify-content-center">
         <div className="form-container">
           <h1 className="text-center">CRM List Clean</h1>
-          <hr className="mb-3" />
 
-          <div className="form-group">
-            <label htmlFor="IDS_Groups" className="form-label">
-              IDS Groups
-            </label>
-            <input
-              className="form-control"
-              type="file"
-              id="IDS_Groups"
-              accept=".xlsx"
-              onChange={onChange}
-              onClick={() => setLoading(true)}
-            />
-          </div>
-          <div className="form-group">
-            <label htmlFor="IDS_Pages" className="form-label">
-              IDS Pages
-            </label>
-            <input
-              className="form-control"
-              type="file"
-              id="IDS_Pages"
-              accept=".xlsx"
-              onChange={onChange}
-              onClick={() => setLoading(true)}
-            />
-          </div>
-          <div className="from-group">
-            <label htmlFor="D7_Pages" className="form-label">
-              D7 Pages
-            </label>
-            <input
-              className="form-control"
-              type="file"
-              id="D7_Pages"
-              accept=".xlsx"
-              onChange={onChange}
-              onClick={() => setLoading(true)}
-            />
-          </div>
+          {next === 0 && (
+            <>
+              <hr className="hr-text" />
+              <div className="form-group">
+                <label htmlFor="IDS_Groups" className="form-label">
+                  IDS Groups
+                </label>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="IDS_Groups"
+                  accept=".xlsx"
+                  onChange={onChange}
+                  onClick={() => setLoading(true)}
+                />
 
-          {(IDS_Groups.length > 0 ||
-            IDS_Pages.length > 0 ||
-            D7_Pages.length > 0) &&
-            !loading && (
-              <div className="form-group w-100">
-                <hr className="mb-3" />
-                <button
-                  type="button"
-                  className=" w-100 btn btn-success btn-block"
-                  onClick={handleClick}
-                >
-                  Download File
-                </button>
+                <label htmlFor="IDS_Pages" className="form-label">
+                  IDS Pages
+                </label>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="IDS_Pages"
+                  accept=".xlsx"
+                  onChange={onChange}
+                  onClick={() => setLoading(true)}
+                />
+
+                <label htmlFor="D7_Pages" className="form-label">
+                  D7 Pages
+                </label>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="D7_Pages"
+                  accept=".xlsx"
+                  onChange={onChange}
+                  onClick={() => setLoading(true)}
+                />
               </div>
-            )}
+
+              {(IDS_Groups.length > 0 ||
+                IDS_Pages.length > 0 ||
+                D7_Pages.length > 0) &&
+                !loading && (
+                  <div className="form-group w-100">
+                    <div className="form-group w-100">
+                      <div className="mt-3">
+                        <hr className="hr-text" />
+                        {/* <hr className="hr-text" data-content="OR" /> */}
+                      </div>
+                      <button
+                        type="button"
+                        className=" btn btn-info w-100"
+                        onClick={() => setNext((i) => i + 1)}
+                      >
+                        Next
+                      </button>
+                    </div>
+                  </div>
+                )}
+            </>
+          )}
+
+          {next === 1 && (
+            <>
+              <button className="btn" onClick={() => setNext((i) => i - 1)}>
+                {"<--Back"}
+              </button>
+              <hr className="hr-text" />
+              <div className="form-group">
+                <label htmlFor="fileName" className="form-label">
+                  Name of OutPut File :
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="fileName"
+                  placeholder={fileName}
+                  onChange={(e) => setFileName(e.target.value)}
+                />
+                <label htmlFor="numFiles" className="form-label">
+                  Name of OutPut File :
+                </label>
+                <input
+                  className="form-control"
+                  min={0}
+                  value={numFiles}
+                  onChange={(e) => {
+                    console.log(numFiles);
+                    setNumFiles(e.target.value);
+                    console.log(e.target.value);
+                  }}
+                  type="number"
+                  id="numFiles"
+                />
+              </div>
+              <hr className="mb-3" />
+              <button
+                type="button"
+                className=" btn btn-success w-100"
+                onClick={handleClick}
+              >
+                Download File
+              </button>
+            </>
+          )}
         </div>
       </div>
     </>
