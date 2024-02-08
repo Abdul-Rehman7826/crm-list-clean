@@ -1,8 +1,10 @@
 import { useState } from "react";
 import * as XLSX from "xlsx";
+import JSZip from "jszip";
 import "./App.css";
 
 function App() {
+  const zip = new JSZip();
   const [IDS_Groups, setIDS_Groups] = useState([]);
   const [IDS_Pages, setIDS_Pages] = useState([]);
   const [D7_Pages, setD7_Pages] = useState([]);
@@ -74,7 +76,7 @@ function App() {
     if (controlId == "IDS_Pages") {
       data.shift();
       var arr = data.map((v) => {
-        return [v[0], v[2]];
+        return [v[0], v[1]];
       });
       console.log(arr);
       if (arr.length > 0) setIDS_Pages(arr);
@@ -146,11 +148,10 @@ function App() {
       dataArray.push([headers, ...newArr.slice(i, i + n)]);
     }
     console.log(dataArray);
-    var blobArr = [];
     const promises = dataArray.map(async (d) => {
       // Create a new workbook
       const workbook = XLSX.utils.book_new();
-      const worksheet = XLSX.utils.aoa_to_sheet(newArr);
+      const worksheet = XLSX.utils.aoa_to_sheet(d);
       XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
       const excelBuffer = XLSX.write(workbook, {
         bookType: "xlsx",
@@ -159,21 +160,27 @@ function App() {
       const blob = new Blob([excelBuffer], {
         type: "application/octet-stream",
       });
-      const url = URL.createObjectURL(blob);
-      downloadFile(url);
-      URL.revokeObjectURL(url);
+
       return blob;
     });
     const res = await Promise.all(promises);
-    console.log(res);
 
+    res.forEach((blob, i) => {
+      zip.file(`${fileName} (${i}).xlsx`, blob);
+    });
+    const zipFile = await zip.generateAsync({ type: "blob" });
+    console.log(zipFile);
+
+    const url = URL.createObjectURL(zipFile);
+    downloadFile(url);
+    URL.revokeObjectURL(url);
     console.log("Done ! ");
   };
 
   function downloadFile(url) {
     const a = document.createElement("a");
     a.href = url;
-    a.download = `${fileName}.xlsx`;
+    a.download = "export files.zip";
     a.style.display = "none";
     document.body.appendChild(a);
     a.click();
