@@ -8,6 +8,10 @@ function App() {
   const [IDS_Groups, setIDS_Groups] = useState([]);
   const [IDS_Pages, setIDS_Pages] = useState([]);
   const [D7_Pages, setD7_Pages] = useState([]);
+
+  const [cusLabel, setCusLabel] = useState("L - Leads In");
+  const [tages, setTages] = useState("");
+
   const [numFiles, setNumFiles] = useState(0);
   const [next, setNext] = useState(0);
 
@@ -59,11 +63,11 @@ function App() {
   }
 
   const onChange = async (e) => {
-    console.log(e.target);
+    // console.log(e.target);
     const [file] = e.target.files;
     const controlId = e.target.id;
     const data = await processExcelFile(file);
-    setLoading((loading) => !loading);
+    setLoading(false);
     console.log("++++++");
     if (controlId == "IDS_Groups") {
       data.shift();
@@ -74,9 +78,10 @@ function App() {
       if (arr.length > 0) setIDS_Groups(arr);
     }
     if (controlId == "IDS_Pages") {
+      var ind = data[0].indexOf("x1i10hfl");
       data.shift();
       var arr = data.map((v) => {
-        return [v[0], v[1]];
+        return [v[0], v[ind]];
       });
       console.log(arr);
       if (arr.length > 0) setIDS_Pages(arr);
@@ -124,8 +129,8 @@ function App() {
         id_,
         "https://www.facebook.com/" + id_,
         v[1],
-        "L - Leads In",
-        "",
+        cusLabel,
+        tages,
         v[2] ? v[2] : "N/A",
       ];
     });
@@ -291,8 +296,28 @@ function App() {
                   placeholder={fileName}
                   onChange={(e) => setFileName(e.target.value)}
                 />
+                <label htmlFor="cuslabel" className="form-label">
+                  Custom Label :
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="cuslabel"
+                  placeholder={cusLabel}
+                  onChange={(e) => setCusLabel(e.target.value)}
+                />
+                <label htmlFor="fileName" className="form-label">
+                  Tages :
+                </label>
+                <input
+                  className="form-control"
+                  type="text"
+                  id="fileName"
+                  placeholder={tages}
+                  onChange={(e) => setTages(e.target.value)}
+                />
                 <label htmlFor="numFiles" className="form-label">
-                  Name of OutPut File :
+                  Number of Files :
                 </label>
                 <input
                   className="form-control"
