@@ -307,7 +307,7 @@ function App() {
                   onChange={(e) => setCusLabel(e.target.value)}
                 />
                 <label htmlFor="fileName" className="form-label">
-                  Tages :
+                  Tags :
                 </label>
                 <input
                   className="form-control"
