@@ -246,7 +246,7 @@ function App() {
     <>
       <div className="p-3 d-flex flex-column justify-content-center">
         <div className="form-container">
-          <h1 className="text-center">Client CRM List Clean</h1>
+          <h2 className="text-center">Client CRM List Clean</h2>
 
           {next === 0 && (
             <>
