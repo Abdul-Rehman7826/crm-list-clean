@@ -109,7 +109,7 @@ function App() {
     }
     if (controlId == "IDS_Ads") {
       var ind_Link = data[0].indexOf("xt0psk2 href");
-      var ind_Nmae = data[0].indexOf("x8t9es0 10");
+      var ind_Nmae = data[0].indexOf("x8t9es0 11");
       data.shift();
       var arr = data.map((v) => {
         return [v[ind_Link], v[ind_Nmae]];
