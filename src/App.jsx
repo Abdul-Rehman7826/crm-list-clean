@@ -132,6 +132,7 @@ function App() {
     arr.push(...D7_Pages);
     arr.push(...IDS_Friends);
     arr.push(...IDS_Ads);
+
     var newArr = [];
 
     arr.forEach((v) => {
@@ -275,17 +276,6 @@ function App() {
                   onClick={() => setLoading(true)}
                 />
 
-                <label htmlFor="D7_Pages" className="form-label">
-                  D7 Pages
-                </label>
-                <input
-                  className="form-control"
-                  type="file"
-                  id="D7_Pages"
-                  accept=".xlsx"
-                  onChange={onChange}
-                  onClick={() => setLoading(true)}
-                />
                 <label htmlFor="IDS_Friends" className="form-label">
                   IDS Friends
                 </label>
@@ -304,6 +294,18 @@ function App() {
                   className="form-control"
                   type="file"
                   id="IDS_Ads"
+                  accept=".xlsx"
+                  onChange={onChange}
+                  onClick={() => setLoading(true)}
+                />
+
+                <label htmlFor="D7_Pages" className="form-label">
+                  D7 Pages
+                </label>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="D7_Pages"
                   accept=".xlsx"
                   onChange={onChange}
                   onClick={() => setLoading(true)}
@@ -342,7 +344,7 @@ function App() {
               <hr className="hr-text" />
               <div className="form-group">
                 <label htmlFor="fileName" className="form-label">
-                  Name of OutPut File :
+                  File Name :
                 </label>
                 <input
                   className="form-control"
@@ -352,7 +354,7 @@ function App() {
                   onChange={(e) => setFileName(e.target.value)}
                 />
                 <label htmlFor="cuslabel" className="form-label">
-                  Custom Label :
+                  Label Name :
                 </label>
                 <input
                   className="form-control"
@@ -362,7 +364,7 @@ function App() {
                   onChange={(e) => setCusLabel(e.target.value)}
                 />
                 <label htmlFor="fileName" className="form-label">
-                  Tags :
+                  Tag Name :
                 </label>
                 <input
                   className="form-control"
