@@ -8,6 +8,8 @@ function App() {
   const [IDS_Groups, setIDS_Groups] = useState([]);
   const [IDS_Pages, setIDS_Pages] = useState([]);
   const [D7_Pages, setD7_Pages] = useState([]);
+  const [IDS_Friends, setIDS_Friends] = useState([]);
+  const [IDS_Ads, setIDS_Ads] = useState([]);
 
   const [cusLabel, setCusLabel] = useState("L - Leads In");
   const [tages, setTages] = useState("");
@@ -95,6 +97,31 @@ function App() {
       console.log(arr);
       if (arr.length > 0) setD7_Pages(arr);
     }
+    if (controlId == "IDS_Friends") {
+      var ind_Link = data[0].indexOf("x1i10hfl href");
+      var ind_Nmae = data[0].indexOf("x193iq5w");
+      data.shift();
+      var arr = data.map((v) => {
+        return [v[ind_Link], v[ind_Nmae]];
+      });
+      console.log(arr);
+      if (arr.length > 0) setIDS_Friends(arr);
+    }
+    if (controlId == "IDS_Ads") {
+      var ind_Link = data[0].indexOf("xt0psk2 href");
+      var ind_Nmae = data[0].indexOf("x8t9es0 10");
+      data.shift();
+      var arr = data.map((v) => {
+        return [v[ind_Link], v[ind_Nmae]];
+      });
+      console.log(arr);
+      if (arr.length > 0) setIDS_Ads(arr);
+    }
+  };
+  const useRegex = (input) => {
+    let regex = /[0-9]+\s+ads/i;
+    console.log(input.match(regex));
+    return input.match(regex);
   };
 
   const handleClick = async () => {
@@ -103,13 +130,18 @@ function App() {
     arr.push(...IDS_Groups);
     arr.push(...IDS_Pages);
     arr.push(...D7_Pages);
-
+    arr.push(...IDS_Friends);
+    arr.push(...IDS_Ads);
     var newArr = [];
 
-    arr.forEach((v, i, ar) => {
-      if (v[0]) newArr.push(v);
+    arr.forEach((v) => {
+      if (v[0] && !useRegex(v[1])) {
+        newArr.push(v);
+      }
     });
+    console.log("merged array : ", newArr);
 
+    // console.log(arr);
     newArr = removeDuplicatesByColumn(newArr, 1);
 
     newArr.forEach((v, i, arr) => {
@@ -254,17 +286,40 @@ function App() {
                   onChange={onChange}
                   onClick={() => setLoading(true)}
                 />
+                <label htmlFor="IDS_Friends" className="form-label">
+                  IDS Friends
+                </label>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="IDS_Friends"
+                  accept=".xlsx"
+                  onChange={onChange}
+                  onClick={() => setLoading(true)}
+                />
+                <label htmlFor="IDS_Ads" className="form-label">
+                  IDS Ads
+                </label>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="IDS_Ads"
+                  accept=".xlsx"
+                  onChange={onChange}
+                  onClick={() => setLoading(true)}
+                />
               </div>
 
               {(IDS_Groups.length > 0 ||
                 IDS_Pages.length > 0 ||
-                D7_Pages.length > 0) &&
-                !loading && (
+                D7_Pages.length > 0 ||
+                IDS_Friends.length > 0 ||
+                IDS_Ads.length > 0) &&
+                !loading === true && (
                   <div className="form-group w-100">
                     <div className="form-group w-100">
                       <div className="mt-3">
                         <hr className="hr-text" />
-                        {/* <hr className="hr-text" data-content="OR" /> */}
                       </div>
                       <button
                         type="button"
