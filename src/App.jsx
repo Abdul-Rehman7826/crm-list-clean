@@ -166,7 +166,7 @@ function App() {
       arr[i] = [
         id_,
         "https://www.facebook.com/" + id_,
-        v[1],
+        v[1] ? v[1] : id_,
         cusLabel,
         tages,
         v[2] ? v[2] : "N/A",
