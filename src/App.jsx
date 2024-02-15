@@ -108,16 +108,21 @@ function App() {
       if (arr.length > 0) setIDS_Friends(arr);
     }
     if (controlId == "IDS_Ads") {
-      var ind_Link = data[0].indexOf("xt0psk2 href");
-      var ind_Nmae = data[0].indexOf("x8t9es0 11");
+      var ind_Link = data[0].indexOf("x1i10hfl href 2");
+      var ind_Nmae = data[0].indexOf("x1i10hfl");
+      if (ind_Link < 0) ind_Link = data[0].indexOf("xt0psk2 href");
+      //xt0psk2 href
+      if (ind_Nmae < 0) ind_Nmae = data[0].indexOf("x8t9es0 11");
+      // console.log(ind_Link, ind_Nmae);
       data.shift();
       var arr = data.map((v) => {
         return [v[ind_Link], v[ind_Nmae]];
       });
-      console.log(arr);
+      // console.log(data);
       if (arr.length > 0) setIDS_Ads(arr);
     }
   };
+
   const useRegex = (input) => {
     let regex = /[0-9]+\s+ads/i;
     console.log(input.match(regex));
