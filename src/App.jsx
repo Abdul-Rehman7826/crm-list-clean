@@ -162,11 +162,11 @@ function App() {
       } else {
         id_ = aa.substring(aa.lastIndexOf("/") + 1);
       }
-
+      var n = v[1].replace("\n", "");
       arr[i] = [
         id_,
         "https://www.facebook.com/" + id_,
-        v[1].length > 1 ? v[1] : id_,
+        n ? n : id_,
         cusLabel,
         tages,
         v[2] ? v[2] : "N/A",
