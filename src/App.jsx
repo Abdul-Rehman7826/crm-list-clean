@@ -110,22 +110,26 @@ function App() {
     if (controlId == "IDS_Ads") {
       var ind_Link = data[0].indexOf("x1i10hfl href 2");
       var ind_Nmae = data[0].indexOf("x1i10hfl");
+      var ind_Nmae_2 = data[0].indexOf("x8t9es0 8");
       if (ind_Link < 0) ind_Link = data[0].indexOf("xt0psk2 href");
       //xt0psk2 href
       if (ind_Nmae < 0) ind_Nmae = data[0].indexOf("x8t9es0 11");
       // console.log(ind_Link, ind_Nmae);
       data.shift();
       var arr = data.map((v) => {
-        return [v[ind_Link], v[ind_Nmae]];
+        return [
+          v[ind_Link],
+          useRegex(v[ind_Nmae]) ? v[ind_Nmae_2] : v[ind_Nmae],
+        ];
       });
-      // console.log(data);
+      console.log("arr - -:", arr);
       if (arr.length > 0) setIDS_Ads(arr);
     }
   };
 
   const useRegex = (input) => {
     let regex = /[0-9]+\s+ads/i;
-    console.log(input.match(regex));
+    // console.log(input.match(regex));
     return input.match(regex);
   };
 
