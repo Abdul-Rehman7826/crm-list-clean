@@ -122,7 +122,7 @@ function App() {
           useRegex(v[ind_Nmae]) ? v[ind_Nmae_2] : v[ind_Nmae],
         ];
       });
-      console.log("arr - -:", arr);
+      // console.log("arr - -:", arr);
       if (arr.length > 0) setIDS_Ads(arr);
     }
   };
