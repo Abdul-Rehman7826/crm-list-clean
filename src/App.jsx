@@ -233,11 +233,52 @@ function App() {
       ];
     });
 
-    setTotalRows(newArr.length);
-    setNumRows(newArr.length);
+    var headers = [
+      "Facebook ID",
+      "Facebook Profile link",
+      "Name",
+      "Label Name",
+      "Tag",
+      "Email",
+    ];
 
-    setAllData(newArr);
-  }
+    // console.log(newArr);
+    // [headers, ...newArr.slice(5, 10)]
+    var dataArray = [];
+    var n = Math.ceil(newArr.length / numFiles);
+
+    for (var i = 0; i < newArr.length; i += n) {
+      dataArray.push([headers, ...newArr.slice(i, i + n)]);
+    }
+    console.log(dataArray);
+    const promises = dataArray.map(async (d) => {
+      // Create a new workbook
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.aoa_to_sheet(d);
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+      const blob = new Blob([excelBuffer], {
+        type: "application/octet-stream",
+      });
+
+      return blob;
+    });
+    const res = await Promise.all(promises);
+
+    res.forEach((blob, i) => {
+      zip.file(`${fileName} (${i}).xlsx`, blob);
+    });
+    const zipFile = await zip.generateAsync({ type: "blob" });
+    console.log(zipFile);
+
+    const url = URL.createObjectURL(zipFile);
+    downloadFile(url);
+    URL.revokeObjectURL(url);
+    console.log("Done ! ");
+  };
 
   function downloadFile(url) {
     const a = document.createElement("a");
