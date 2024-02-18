@@ -10,13 +10,15 @@ function App() {
   const [D7_Pages, setD7_Pages] = useState([]);
   const [IDS_Friends, setIDS_Friends] = useState([]);
   const [IDS_Ads, setIDS_Ads] = useState([]);
+  const [allData, setAllData] = useState([]);
 
   const [cusLabel, setCusLabel] = useState("L - Leads In");
   const [tages, setTages] = useState("");
 
   const [numRows, setNumRows] = useState(0);
   const [totalRows, setTotalRows] = useState(0);
-  const [next, setNext] = useState(2);
+  const [next, setNext] = useState(0);
+
   const [arrSplit, setArrSplit] = useState([]);
   const [fileName, setFileName] = useState(`Output ${fileNum()}`);
   const [loading, setLoading] = useState(false);
@@ -58,10 +60,10 @@ function App() {
   async function processExcelFile(file) {
     try {
       const excelData = await readExcelFile(file);
-      console.log("Excel file data:", excelData);
+      // console.log("Excel file data:", excelData);
       return excelData;
     } catch (error) {
-      console.error("Error reading Excel file:", error);
+      // console.error("Error reading Excel file:", error);
       return [];
     }
   }
@@ -78,7 +80,7 @@ function App() {
       var arr = data.map((v) => {
         return [v[0], v[2]];
       });
-      console.log(arr);
+      // console.log(arr);
       if (arr.length > 0) setIDS_Groups(arr);
     }
     if (controlId == "IDS_Pages") {
@@ -87,7 +89,7 @@ function App() {
       var arr = data.map((v) => {
         return [v[0], v[ind]];
       });
-      console.log(arr);
+      // console.log(arr);
       if (arr.length > 0) setIDS_Pages(arr);
     }
     if (controlId == "D7_Pages") {
@@ -96,7 +98,7 @@ function App() {
       var arr = data.map((v) => {
         return [v[6], v[0], v[2]];
       });
-      console.log(arr);
+      // console.log(arr);
       if (arr.length > 0) setD7_Pages(arr);
     }
     if (controlId == "IDS_Friends") {
@@ -106,7 +108,7 @@ function App() {
       var arr = data.map((v) => {
         return [v[ind_Link], v[ind_Nmae]];
       });
-      console.log(arr);
+      // console.log(arr);
       if (arr.length > 0) setIDS_Friends(arr);
     }
     if (controlId == "IDS_Ads") {
@@ -136,6 +138,58 @@ function App() {
   };
 
   const handleClick = async () => {
+    var newArr = allData;
+    console.log(newArr);
+
+    var headers = [
+      "Facebook ID",
+      "Facebook Profile link",
+      "Name",
+      "Label Name",
+      "Tag",
+      "Email",
+    ];
+
+    // console.log(newArr);
+    // [headers, ...newArr.slice(5, 10)]
+    var dataArray = [];
+    var n = Math.ceil(newArr.length / numRows);
+    var c = 0;
+    for (var i = 0; i < n; i++) {
+      dataArray.push([headers, ...newArr.slice(c, c + numRows)]);
+      c += numRows;
+    }
+    console.log(dataArray);
+    const promises = dataArray.map(async (d) => {
+      // Create a new workbook
+      const workbook = XLSX.utils.book_new();
+      const worksheet = XLSX.utils.aoa_to_sheet(d);
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+      const excelBuffer = XLSX.write(workbook, {
+        bookType: "xlsx",
+        type: "array",
+      });
+      const blob = new Blob([excelBuffer], {
+        type: "application/octet-stream",
+      });
+
+      return blob;
+    });
+    const res = await Promise.all(promises);
+
+    res.forEach((blob, i) => {
+      zip.file(`${fileName} (${i}).xlsx`, blob);
+    });
+    const zipFile = await zip.generateAsync({ type: "blob" });
+    // console.log(zipFile);
+
+    const url = URL.createObjectURL(zipFile);
+    downloadFile(url);
+    URL.revokeObjectURL(url);
+    console.log("Done ! ");
+  };
+
+  function cleanAndMarg() {
     var arr = [];
 
     arr.push(...IDS_Groups);
@@ -152,7 +206,6 @@ function App() {
       }
     });
     // console.log("merged array : ", newArr);
-
     // console.log(arr);
     newArr = removeDuplicatesByColumn(newArr, 1);
 
@@ -180,52 +233,11 @@ function App() {
       ];
     });
 
-    var headers = [
-      "Facebook ID",
-      "Facebook Profile link",
-      "Name",
-      "Label Name",
-      "Tag",
-      "Email",
-    ];
+    setTotalRows(newArr.length);
+    setNumRows(newArr.length);
 
-    // console.log(newArr);
-    // [headers, ...newArr.slice(5, 10)]
-    var dataArray = [];
-    var n = Math.ceil(newArr.length / numFiles);
-
-    for (var i = 0; i < newArr.length; i += n) {
-      dataArray.push([headers, ...newArr.slice(i, i + n)]);
-    }
-    console.log(dataArray);
-    const promises = dataArray.map(async (d) => {
-      // Create a new workbook
-      const workbook = XLSX.utils.book_new();
-      const worksheet = XLSX.utils.aoa_to_sheet(d);
-      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
-      const excelBuffer = XLSX.write(workbook, {
-        bookType: "xlsx",
-        type: "array",
-      });
-      const blob = new Blob([excelBuffer], {
-        type: "application/octet-stream",
-      });
-
-      return blob;
-    });
-    const res = await Promise.all(promises);
-
-    res.forEach((blob, i) => {
-      zip.file(`${fileName} (${i}).xlsx`, blob);
-    });
-    const zipFile = await zip.generateAsync({ type: "blob" });
-    console.log(zipFile);
-
-    const url = URL.createObjectURL(zipFile);
-    downloadFile(url);
-    URL.revokeObjectURL(url);
-    console.log("Done ! ");
-  };
+    setAllData(newArr);
+  }
 
   function downloadFile(url) {
     const a = document.createElement("a");
@@ -350,7 +362,18 @@ function App() {
 
           {next === 1 && (
             <>
-              <button className="btn" onClick={() => setNext((i) => i - 1)}>
+              <button
+                className="btn"
+                onClick={() => {
+                  setIDS_Groups([]);
+                  setIDS_Pages([]);
+                  setD7_Pages([]);
+                  setIDS_Friends([]);
+                  setIDS_Ads([]);
+                  setAllData([]);
+                  setNext((i) => i - 1);
+                }}
+              >
                 {"<--Back"}
               </button>
               <hr className="hr-text" />
@@ -396,20 +419,7 @@ function App() {
                     className=" btn btn-info w-100"
                     onClick={() => {
                       setNext((i) => i + 1);
-                      setTotalRows(
-                        IDS_Groups.length +
-                          IDS_Pages.length +
-                          D7_Pages.length +
-                          IDS_Friends.length +
-                          IDS_Ads.length
-                      );
-                      setNumRows(
-                        IDS_Groups.length +
-                          IDS_Pages.length +
-                          D7_Pages.length +
-                          IDS_Friends.length +
-                          IDS_Ads.length
-                      );
+                      cleanAndMarg();
                     }}
                   >
                     Next
