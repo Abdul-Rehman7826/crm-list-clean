@@ -340,42 +340,27 @@ function App() {
                 IDS_Pages.length > 0 ||
                 D7_Pages.length > 0 ||
                 IDS_Friends.length > 0 ||
-                IDS_Ads.length > 0) &&
-                !loading === true && (
+                IDS_Ads.length > 0) && (
+                <div className="form-group w-100">
                   <div className="form-group w-100">
-                    <div className="form-group w-100">
-                      <div className="mt-3">
-                        <hr className="hr-text" />
-                      </div>
-                      <button
-                        type="button"
-                        className=" btn btn-info w-100"
-                        onClick={() => setNext((i) => i + 1)}
-                      >
-                        Next
-                      </button>
+                    <div className="mt-3">
+                      <hr className="hr-text" />
                     </div>
+                    <button
+                      type="button"
+                      className=" btn btn-info w-100"
+                      onClick={() => setNext((i) => i + 1)}
+                    >
+                      Next
+                    </button>
                   </div>
-                )}
+                </div>
+              )}
             </>
           )}
 
           {next === 1 && (
             <>
-              <button
-                className="btn"
-                onClick={() => {
-                  setIDS_Groups([]);
-                  setIDS_Pages([]);
-                  setD7_Pages([]);
-                  setIDS_Friends([]);
-                  setIDS_Ads([]);
-                  setAllData([]);
-                  setNext((i) => i - 1);
-                }}
-              >
-                {"<--Back"}
-              </button>
               <hr className="hr-text" />
               <div className="form-group">
                 <label htmlFor="fileName" className="form-label">
@@ -409,14 +394,29 @@ function App() {
                   onChange={(e) => setTages(e.target.value)}
                 />
               </div>
-              <div className="form-group w-100">
-                <div className="form-group w-100">
-                  <div className="mt-3">
-                    <hr className="hr-text" />
-                  </div>
+              <div className="w-100  d-inline">
+                <hr className="hr-text" />
+                <div className=" d-flex justify-content-between">
+                  <button
+                    className="btn btn-light w-50"
+                    onClick={() => {
+                      setIDS_Groups([]);
+                      setIDS_Pages([]);
+                      setD7_Pages([]);
+                      setIDS_Friends([]);
+                      setIDS_Ads([]);
+                      setAllData([]);
+                      setAllData([]);
+                      setCusLabel("L - Leads In");
+                      setTages("");
+                      setNext((i) => i - 1);
+                    }}
+                  >
+                    Previous
+                  </button>
                   <button
                     type="button"
-                    className=" btn btn-info w-100"
+                    className=" btn btn-info w-50"
                     onClick={() => {
                       setNext((i) => i + 1);
                       cleanAndMarg();
@@ -440,7 +440,7 @@ function App() {
               <hr className="hr-text" />
               <div className="form-group">
                 <label htmlFor="numRows" className="form-label">
-                  Rows in a file :
+                  Leads per file :
                 </label>
                 <input
                   className="form-control"
@@ -475,7 +475,7 @@ function App() {
                 <thead>
                   <tr>
                     <th scope="col">File #</th>
-                    <th scope="col">Rows</th>
+                    <th scope="col">Leads</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -487,14 +487,36 @@ function App() {
                   ))}
                 </tbody>
               </table>
-              <hr className="hr-text" />
-              <button
-                type="button"
-                className=" btn btn-success w-100"
-                onClick={handleClick}
-              >
-                Download File
-              </button>
+
+              <div className="w-100  d-inline">
+                <hr className="hr-text" />
+                <div className=" d-flex justify-content-between">
+                  <button
+                    className="btn btn-light w-50"
+                    onClick={() => {
+                      setIDS_Groups([]);
+                      setIDS_Pages([]);
+                      setD7_Pages([]);
+                      setIDS_Friends([]);
+                      setIDS_Ads([]);
+                      setAllData([]);
+                      setAllData([]);
+                      setCusLabel("L - Leads In");
+                      setTages("");
+                      setNext((i) => i - 2);
+                    }}
+                  >
+                    Reset
+                  </button>
+                  <button
+                    type="button"
+                    className=" btn btn-success w-50"
+                    onClick={handleClick}
+                  >
+                    Download File
+                  </button>
+                </div>
+              </div>
             </>
           )}
         </div>
