@@ -435,7 +435,7 @@ function App() {
                 {"<--Back"}
               </button>
               <hr className="hr-text" />
-              <h4 className="text-center">Total Rows</h4>
+              <h4 className="text-center">Total Leads</h4>
               <h5 className="text-center">{totalRows}</h5>
               <hr className="hr-text" />
               <div className="form-group">
