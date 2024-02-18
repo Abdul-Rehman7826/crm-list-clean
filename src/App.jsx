@@ -146,7 +146,7 @@ function App() {
       "Facebook Profile link",
       "Name",
       "Label Name",
-      "Tag",
+      "Tags",
       "Email",
     ];
 
