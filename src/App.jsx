@@ -14,9 +14,10 @@ function App() {
   const [cusLabel, setCusLabel] = useState("L - Leads In");
   const [tages, setTages] = useState("");
 
-  const [numFiles, setNumFiles] = useState(0);
-  const [next, setNext] = useState(0);
-
+  const [numRows, setNumRows] = useState(0);
+  const [totalRows, setTotalRows] = useState(0);
+  const [next, setNext] = useState(2);
+  const [arrSplit, setArrSplit] = useState([]);
   const [fileName, setFileName] = useState(`Output ${fileNum()}`);
   const [loading, setLoading] = useState(false);
 
@@ -32,6 +33,7 @@ function App() {
       ydate.getSeconds() > 10 ? ydate.getSeconds() : "0" + ydate.getSeconds()
     }`;
   }
+
   function readExcelFile(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -149,7 +151,7 @@ function App() {
         newArr.push(v);
       }
     });
-    console.log("merged array : ", newArr);
+    // console.log("merged array : ", newArr);
 
     // console.log(arr);
     newArr = removeDuplicatesByColumn(newArr, 1);
@@ -373,33 +375,109 @@ function App() {
                   placeholder={cusLabel}
                   onChange={(e) => setCusLabel(e.target.value)}
                 />
-                <label htmlFor="fileName" className="form-label">
+                <label htmlFor="tagName" className="form-label">
                   Tag Name :
                 </label>
                 <input
                   className="form-control"
                   type="text"
-                  id="fileName"
+                  id="tagName"
                   placeholder={tages}
                   onChange={(e) => setTages(e.target.value)}
                 />
-                <label htmlFor="numFiles" className="form-label">
-                  Number of Files :
+              </div>
+              <div className="form-group w-100">
+                <div className="form-group w-100">
+                  <div className="mt-3">
+                    <hr className="hr-text" />
+                  </div>
+                  <button
+                    type="button"
+                    className=" btn btn-info w-100"
+                    onClick={() => {
+                      setNext((i) => i + 1);
+                      setTotalRows(
+                        IDS_Groups.length +
+                          IDS_Pages.length +
+                          D7_Pages.length +
+                          IDS_Friends.length +
+                          IDS_Ads.length
+                      );
+                      setNumRows(
+                        IDS_Groups.length +
+                          IDS_Pages.length +
+                          D7_Pages.length +
+                          IDS_Friends.length +
+                          IDS_Ads.length
+                      );
+                    }}
+                  >
+                    Next
+                  </button>
+                </div>
+              </div>
+            </>
+          )}
+
+          {next === 2 && (
+            <>
+              <button className="btn" onClick={() => setNext((i) => i - 1)}>
+                {"<--Back"}
+              </button>
+              <hr className="hr-text" />
+              <h4 className="text-center">Total Rows</h4>
+              <h5 className="text-center">{totalRows}</h5>
+              <hr className="hr-text" />
+              <div className="form-group">
+                <label htmlFor="numRows" className="form-label">
+                  Rows in a file :
                 </label>
                 <input
                   className="form-control"
-                  min={0}
-                  value={numFiles}
+                  min={1}
+                  max={totalRows}
+                  value={numRows}
                   onChange={(e) => {
-                    console.log(numFiles);
-                    setNumFiles(e.target.value);
-                    console.log(e.target.value);
+                    setNumRows(e.target.value);
+                    var arr = [];
+                    for (
+                      var i = 1;
+                      i <= Math.ceil(totalRows / Number(e.target.value));
+                      i++
+                    ) {
+                      var v =
+                        arr.length * Number(e.target.value) +
+                          Number(e.target.value) >
+                        totalRows
+                          ? totalRows - arr.length * Number(e.target.value)
+                          : Number(e.target.value);
+                      arr.push(v);
+                    }
+                    setArrSplit(arr);
                   }}
                   type="number"
-                  id="numFiles"
+                  id="numRows"
                 />
               </div>
-              <hr className="mb-3" />
+
+              <hr className="hr-text" />
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th scope="col">File #</th>
+                    <th scope="col">Rows</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {arrSplit?.map((num, index) => (
+                    <tr key={index}>
+                      <td>{index + 1}</td>
+                      <td>{num}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <hr className="hr-text" />
               <button
                 type="button"
                 className=" btn btn-success w-100"
