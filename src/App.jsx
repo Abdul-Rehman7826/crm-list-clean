@@ -347,8 +347,24 @@ function App() {
                       <hr className="hr-text" />
                     </div>
                     <button
+                      className="btn btn-light w-50"
+                      onClick={() => {
+                        setIDS_Groups([]);
+                        setIDS_Pages([]);
+                        setD7_Pages([]);
+                        setIDS_Friends([]);
+                        setIDS_Ads([]);
+                        setAllData([]);
+                        setAllData([]);
+                        setCusLabel("L - Leads In");
+                        setTages("");
+                      }}
+                    >
+                      Reset
+                    </button>
+                    <button
                       type="button"
-                      className=" btn btn-info w-100"
+                      className=" btn btn-info w-50"
                       onClick={() => setNext((i) => i + 1)}
                     >
                       Next
@@ -361,6 +377,23 @@ function App() {
 
           {next === 1 && (
             <>
+              {/* <button
+                className="btn btn-link"
+                onClick={() => {
+                  setIDS_Groups([]);
+                  setIDS_Pages([]);
+                  setD7_Pages([]);
+                  setIDS_Friends([]);
+                  setIDS_Ads([]);
+                  setAllData([]);
+                  setAllData([]);
+                  setCusLabel("L - Leads In");
+                  setTages("");
+                  setNext((i) => i - 1);
+                }}
+              >
+                {"<--Back"}
+              </button> */}
               <hr className="hr-text" />
               <div className="form-group">
                 <label htmlFor="fileName" className="form-label">
@@ -412,7 +445,7 @@ function App() {
                       setNext((i) => i - 1);
                     }}
                   >
-                    Previous
+                    Reset
                   </button>
                   <button
                     type="button"
@@ -431,7 +464,10 @@ function App() {
 
           {next === 2 && (
             <>
-              <button className="btn" onClick={() => setNext((i) => i - 1)}>
+              <button
+                className="btn btn-link"
+                onClick={() => setNext((i) => i - 1)}
+              >
                 {"<--Back"}
               </button>
               <hr className="hr-text" />
