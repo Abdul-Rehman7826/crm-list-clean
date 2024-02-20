@@ -207,7 +207,6 @@ function App() {
     });
     // console.log("merged array : ", newArr);
     // console.log(arr);
-    newArr = removeDuplicatesByColumn(newArr, 1);
 
     newArr.forEach((v, i, arr) => {
       var aa = v[0].replace("?__tn__=%3C", "");
@@ -232,7 +231,7 @@ function App() {
         v[2] ? v[2] : "N/A",
       ];
     });
-
+    newArr = removeDuplicatesByColumn(newArr, 0);
     setTotalRows(newArr.length);
     setNumRows(newArr.length);
 
