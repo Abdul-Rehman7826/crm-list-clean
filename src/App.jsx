@@ -5,6 +5,7 @@ import "./App.css";
 
 function App() {
   const zip = new JSZip();
+  const [ES_Pages, setES_Pages] = useState([]);
   const [IDS_Groups, setIDS_Groups] = useState([]);
   const [IDS_Pages, setIDS_Pages] = useState([]);
   const [D7_Pages, setD7_Pages] = useState([]);
@@ -75,10 +76,22 @@ function App() {
     const data = await processExcelFile(file);
     setLoading(false);
     console.log("++++++");
+    var arr = [];
+    if (controlId == "ES_Pages") {
+      data.shift();
+      var arr = data.map((v) => {
+        return [v[3], v[2], v[1]];
+      });
+
+      arr = arr.filter((v) => v[0].includes("facebook.com/pages/"));
+
+      // console.log(arr);
+      if (arr.length > 0) setES_Pages(arr);
+    }
     if (controlId == "IDS_Groups") {
       data.shift();
       var arr = data.map((v) => {
-        return [v[0], v[2]];
+        return [v[3], v[2]];
       });
       // console.log(arr);
       if (arr.length > 0) setIDS_Groups(arr);
@@ -150,8 +163,6 @@ function App() {
       "Email",
     ];
 
-    // console.log(newArr);
-    // [headers, ...newArr.slice(5, 10)]
     var dataArray = [];
     var n = Math.ceil(newArr.length / numRows);
     var c = 0;
@@ -159,7 +170,7 @@ function App() {
       dataArray.push([headers, ...newArr.slice(c, c + numRows)]);
       c += numRows;
     }
-    console.log(dataArray);
+
     const promises = dataArray.map(async (d) => {
       // Create a new workbook
       const workbook = XLSX.utils.book_new();
@@ -192,6 +203,7 @@ function App() {
   function cleanAndMarg() {
     var arr = [];
 
+    arr.push(...ES_Pages);
     arr.push(...IDS_Groups);
     arr.push(...IDS_Pages);
     arr.push(...D7_Pages);
@@ -212,16 +224,18 @@ function App() {
       var aa = v[0].replace("?__tn__=%3C", "");
       aa = aa.replace("&__tn__=%3C", "");
       aa = aa.replace(/\/$/, "");
-
+      aa = aa.replace(/\/posts\/.*$/, "");
+      aa = aa.replace(/\/app\/.*$/, "");
+      aa = aa.replace(/\/Leto\/.*$/, "");
+      aa = aa.replace("?ref=mf", "");
+      aa = aa.replace("?_fb_noscript=1", "");
+      aa = aa.replace(/\?.*$/, "");
       var id_ = "";
-
       if (aa.toString().indexOf("?id=") !== -1) {
         id_ = aa.substring(aa.lastIndexOf("?id=") + 4);
       } else {
         id_ = aa.substring(aa.lastIndexOf("/") + 1);
       }
-
-      // console.log("v[ " + i + "] : " + v[1].length > 1, v[1].length);
       arr[i] = [
         id_,
         "https://www.facebook.com/" + id_,
@@ -261,7 +275,6 @@ function App() {
       }
     }
 
-    // console.log(seen);
     return uniqueArray;
   }
 
@@ -275,6 +288,18 @@ function App() {
             <>
               <hr className="hr-text" />
               <div className="form-group">
+                <label htmlFor="IDS_Groups" className="form-label">
+                  ES Pages
+                </label>
+                <input
+                  className="form-control"
+                  type="file"
+                  id="ES_Pages"
+                  accept=".xlsx"
+                  onChange={onChange}
+                  onClick={() => setLoading(true)}
+                />
+
                 <label htmlFor="IDS_Groups" className="form-label">
                   IDS Groups
                 </label>
@@ -335,7 +360,8 @@ function App() {
                 />
               </div>
 
-              {(IDS_Groups.length > 0 ||
+              {(ES_Pages.length > 0 ||
+                IDS_Groups.length > 0 ||
                 IDS_Pages.length > 0 ||
                 D7_Pages.length > 0 ||
                 IDS_Friends.length > 0 ||
@@ -376,23 +402,6 @@ function App() {
 
           {next === 1 && (
             <>
-              {/* <button
-                className="btn btn-link"
-                onClick={() => {
-                  setIDS_Groups([]);
-                  setIDS_Pages([]);
-                  setD7_Pages([]);
-                  setIDS_Friends([]);
-                  setIDS_Ads([]);
-                  setAllData([]);
-                  setAllData([]);
-                  setCusLabel("L - Leads In");
-                  setTages("");
-                  setNext((i) => i - 1);
-                }}
-              >
-                {"<--Back"}
-              </button> */}
               <hr className="hr-text" />
               <div className="form-group">
                 <label htmlFor="fileName" className="form-label">
