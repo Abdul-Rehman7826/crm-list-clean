@@ -61,7 +61,7 @@ function App() {
   async function processExcelFile(file) {
     try {
       const excelData = await readExcelFile(file);
-      // console.log("Excel file data:", excelData);
+      console.log("Excel file data:", excelData);
       return excelData;
     } catch (error) {
       // console.error("Error reading Excel file:", error);
@@ -295,7 +295,7 @@ function App() {
                   className="form-control"
                   type="file"
                   id="ES_Pages"
-                  accept=".xlsx"
+                  accept=".xlsx, .csv"
                   onChange={onChange}
                   onClick={() => setLoading(true)}
                 />
