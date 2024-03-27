@@ -234,10 +234,14 @@ function App() {
       aa = aa.replace(/\/$/, "");
 
       var id_ = "";
-      if (aa.toString().indexOf("?id=") !== -1) {
-        id_ = aa.substring(aa.lastIndexOf("?id=") + 4);
+      if (aa.includes("https://www.facebook.com/")) {
+        if (aa.toString().indexOf("?id=") !== -1) {
+          id_ = aa.substring(aa.lastIndexOf("?id=") + 4);
+        } else {
+          id_ = aa.substring(aa.lastIndexOf("/") + 1);
+        }
       } else {
-        id_ = aa.substring(aa.lastIndexOf("/") + 1);
+        id = aa;
       }
       arr[i] = [
         id_,
