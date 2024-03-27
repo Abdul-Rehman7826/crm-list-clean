@@ -84,6 +84,16 @@ function App() {
       });
 
       arr = arr.filter((v) => v[0].includes("facebook.com/pages/"));
+      arr = arr.map((v) => {
+        var aa = v[0];
+        aa = aa.replace(/\/posts\/.*$/, "");
+        aa = aa.replace(/\/app\/.*$/, "");
+        aa = aa.replace(/\/Leto\/.*$/, "");
+        aa = aa.replace(/\?.*$/, "");
+        return [aa, v[1], v[2]];
+      });
+
+      arr = arr.filter((v) => typeof v[0] === "number");
 
       // console.log(arr);
       if (arr.length > 0) setES_Pages(arr);
@@ -197,7 +207,7 @@ function App() {
     const url = URL.createObjectURL(zipFile);
     downloadFile(url);
     URL.revokeObjectURL(url);
-    console.log("Done ! ");
+    // console.log("Done ! ");
   };
 
   function cleanAndMarg() {
@@ -217,19 +227,12 @@ function App() {
         newArr.push(v);
       }
     });
-    // console.log("merged array : ", newArr);
-    // console.log(arr);
 
     newArr.forEach((v, i, arr) => {
       var aa = v[0].replace("?__tn__=%3C", "");
       aa = aa.replace("&__tn__=%3C", "");
       aa = aa.replace(/\/$/, "");
-      aa = aa.replace(/\/posts\/.*$/, "");
-      aa = aa.replace(/\/app\/.*$/, "");
-      aa = aa.replace(/\/Leto\/.*$/, "");
-      aa = aa.replace("?ref=mf", "");
-      aa = aa.replace("?_fb_noscript=1", "");
-      aa = aa.replace(/\?.*$/, "");
+
       var id_ = "";
       if (aa.toString().indexOf("?id=") !== -1) {
         id_ = aa.substring(aa.lastIndexOf("?id=") + 4);
