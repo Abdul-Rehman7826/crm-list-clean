@@ -84,19 +84,24 @@ function App() {
       });
 
       arr = arr.filter((v) => v[0].includes("facebook.com/pages/"));
+      console.log(arr);
       arr = arr.map((v) => {
         var aa = v[0];
         aa = aa.replace(/\/posts\/.*$/, "");
         aa = aa.replace(/\/app\/.*$/, "");
         aa = aa.replace(/\/Leto\/.*$/, "");
         aa = aa.replace(/\?.*$/, "");
-        return [aa, v[1], v[2]];
+        aa = aa.replace(/\/$/, "");
+        aa = aa.substring(aa.lastIndexOf("/") + 1);
+        return [aa, v[1].replace("-", " "), v[2]];
       });
 
-      arr = arr.filter((v) => typeof v[0] === "number");
+      arr = arr.filter(
+        (v) => typeof v[0] === "number" || !isNaN(parseFloat(v[0]))
+      );
 
-      // console.log(arr);
-      if (arr.length > 0) setES_Pages(arr);
+      console.log(arr);
+      setES_Pages(arr);
     }
     if (controlId == "IDS_Groups") {
       data.shift();
