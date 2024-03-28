@@ -246,7 +246,7 @@ function App() {
           id_ = aa.substring(aa.lastIndexOf("/") + 1);
         }
       } else {
-        id = aa;
+        id_ = aa;
       }
       arr[i] = [
         id_,
@@ -257,7 +257,10 @@ function App() {
         v[2] ? v[2] : "N/A",
       ];
     });
+
+    // console.log("length b : ", newArr.length);
     newArr = removeDuplicatesByColumn(newArr, 0);
+    // console.log("length : ", newArr.length);
     setTotalRows(newArr.length);
     setNumRows(newArr.length);
 
