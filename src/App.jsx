@@ -217,7 +217,7 @@ function App() {
 
   function cleanAndMarg() {
     var arr = [];
-
+    console.log("Cleaning...");
     arr.push(...ES_Pages);
     arr.push(...IDS_Groups);
     arr.push(...IDS_Pages);
