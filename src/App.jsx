@@ -295,10 +295,9 @@ function App() {
 
   return (
     <>
-      <div className="p-3 d-flex flex-column justify-content-center">
+      <div className="d-flex flex-column justify-content-center">
         <div className="form-container">
           <h2 className="text-center">Client CRM List Clean</h2>
-
           {next === 0 && (
             <>
               <hr className="hr-text" />
@@ -579,6 +578,30 @@ function App() {
             </>
           )}
         </div>
+      </div>
+      <div>
+        <p className="text-center p-3">
+          Powered By Scaling With{" "}
+          <span>
+            <a
+              className="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+              href="https://www.scalingwithautomations.com/"
+              target="_blank"
+            >
+              Automations
+            </a>
+          </span>{" "}
+          and{" "}
+          <span>
+            <a
+              className="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+              href="https://youtube.com/playlist?list=PLlFU8OmArcVKf9TEOFN55xOIU_psWmRoa&si=dO7NEu7v7XE2yioB"
+              target="_blank"
+            >
+              User Trainings
+            </a>
+          </span>
+        </p>
       </div>
     </>
   );
