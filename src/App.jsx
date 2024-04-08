@@ -140,10 +140,10 @@ function App() {
       if (arr.length > 0) setIDS_Friends(arr);
     }
     if (controlId == "IDS_Ads") {
-      var ind_Link = data[0].indexOf("x1i10hfl href 2");
+      var ind_Link = data[0].indexOf("xt0psk2 href");
       var ind_Nmae = data[0].indexOf("x1i10hfl");
       var ind_Nmae_2 = data[0].indexOf("x8t9es0 8");
-      if (ind_Link < 0) ind_Link = data[0].indexOf("xt0psk2 href");
+      if (ind_Link < 0) ind_Link = data[0].indexOf("x1i10hfl href 2");
       //xt0psk2 href
       if (ind_Nmae < 0) ind_Nmae = data[0].indexOf("x8t9es0 11");
       // console.log(ind_Link, ind_Nmae);
@@ -581,14 +581,14 @@ function App() {
       </div>
       <div>
         <p className="text-center p-3">
-          Powered By Scaling With{" "}
+          Powered By{" "}
           <span>
             <a
               className="link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
               href="https://www.scalingwithautomations.com/"
               target="_blank"
             >
-              Automations
+              Scaling With Automations
             </a>
           </span>{" "}
           and{" "}
